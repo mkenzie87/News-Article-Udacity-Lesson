@@ -1,11 +1,13 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 var path = require('path')
 const fetch = require('node-fetch')
 const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors')
 const mockAPIResponse = require('./mockAPI.js')
-const dotenv = require('dotenv');
-dotenv.config();
+
 
 const app = express()
 app.use(bodyParser.urlencoded({
@@ -31,28 +33,23 @@ app.get('/test', function(req, res) {
 })
 
 
-/
-
-
 app.post('/process-text', function(req, res) {
 
   // meaningcloud api structure
   // let baseURL = 'https://api.meaningcloud.com/sentiment-2.1?key=APIKEYHERE&lang=en&txt=hello&model=general';
 
-
   // Establishing API Info
   const apiKey = process.env.API_KEY; // meaningcloud API key hidden
+  const articleURL = req.body.articleURL;
 
   // Building Fetch URL Using Base Url then adding Params with API Key and URL Info
   const baseURL = 'https://api.meaningcloud.com/sentiment-2.1' //meaningcloud base request url
-  const allParams = `?key=${apiKey}&lang=en&model=general` // adding API Params
+  const allParams = `?key=${apiKey}&lang=en&model=general&url=${articleURL}` // adding API Params
   const fetchURL = baseURL + allParams; // builing full Fetch Url
 
   console.log(fetchURL); // logging Fetch URL
 
-
-
-  fetch("fetchURL", {
+  fetch(fetchURL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -61,6 +58,12 @@ app.post('/process-text', function(req, res) {
     return response.json();
   }).then((data) => {
     console.log(data);
-    res.send(data)
-  })
+    res.send({
+      irony: data.irony,
+      agreement: data.agreement,
+      subjectivity: data.subjectivity,
+      confidence: data.confidence,
+      status: data.status.msg,
+    })
+  });
 })
