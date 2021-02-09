@@ -25,7 +25,9 @@ function handleSubmit(event) {
           document.getElementById('status').innerHTML = res.status
       })
 
-    } 
+    } else {
+      alert('Invalid URL: Please Use Valid URL Structure ');
+    }
 }
 
 export { handleSubmit }
