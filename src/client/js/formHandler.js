@@ -9,7 +9,7 @@ function handleSubmit(event) {
     console.log("::: Form Submitted :::")
 
     if(validator){
-      fetch('http://localhost:8080/process-text', {
+      fetch('http://localhost:8081/process-text', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ articleURL: formText })
